@@ -31,8 +31,8 @@ function App() {
           >
             <h1 className="text-4xl font-bold mb-4">
               Let’s turn your data into <br />
-              <span className="text-[#Cb9531]">powerful insights</span> through <br />
-              <span className="text-[#Cb9531]">engineered data pipelines</span>.
+              powerful insights through <br />
+              engineered data pipelines.
             </h1>
             <p className="text-xl max-w-lg mb-6">
               I am Jay Dan Baculi, an aspiring Data Engineer.
@@ -41,7 +41,7 @@ function App() {
               href="#portfolio"
               className="bg-[#Cb9531] hover:bg-[#e0b53c] px-6 py-3 rounded-lg text-black font-semibold transition"
             >
-              View My Work
+              View My Portfolio
             </a>
           </div>
         </section>
