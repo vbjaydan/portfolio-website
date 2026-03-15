@@ -1,0 +1,100 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>L-Shaped Pipeline - Rounded Corners</title>
+<style>
+body {
+  margin: 0;
+  background: #474344; /* Updated background color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.pipeline {
+  stroke: #9c9c9f;
+  stroke-width: 12; /* thick line */
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round; /* smooth corners */
+}
+
+.packet {
+  fill: #Cb9531;
+  r: 12;
+  filter: url(#glowPacket);
+  animation: glowPulse 1s infinite alternate;
+}
+
+/* Flashy glow without transparency */
+@keyframes glowPulse {
+  0% {
+    filter: drop-shadow(0 0 6px #Cb9531);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px #Cb9531);
+  }
+  100% {
+    filter: drop-shadow(0 0 6px #Cb9531);
+  }
+}
+</style>
+</head>
+<body>
+
+<svg width="1300" height="450" viewBox="0 0 1300 450">
+<defs>
+<filter id="glowPacket" x="-50%" y="-50%" width="200%" height="200%">
+  <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+  <feMerge>
+    <feMergeNode in="blur"/>
+    <feMergeNode in="SourceGraphic"/>
+  </feMerge>
+</filter>
+</defs>
+
+<!-- L-shaped pipeline with rounded corners -->
+<path id="pipeline" class="pipeline" d="
+  M0 100
+  L780 100
+  Q800 100 800 120
+  L800 410
+  Q800 430 820 430
+  L1300 430
+"/>
+
+<!-- moving packets -->
+<circle class="packet" id="packet1" r="12"/>
+<circle class="packet" id="packet2" r="12"/>
+<circle class="packet" id="packet3" r="12"/>
+</svg>
+
+<script>
+const path = document.getElementById("pipeline");
+const packets = [
+  document.getElementById("packet1"),
+  document.getElementById("packet2"),
+  document.getElementById("packet3")
+];
+
+const length = path.getTotalLength();
+let progress = [0, 250, 500];
+
+function animate() {
+  for (let i = 0; i < packets.length; i++) {
+    progress[i] += 4; // packet speed
+    if (progress[i] > length) progress[i] -= length;
+
+    const point = path.getPointAtLength(progress[i]);
+    packets[i].setAttribute("cx", point.x);
+    packets[i].setAttribute("cy", point.y);
+  }
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+</body>
+</html>
