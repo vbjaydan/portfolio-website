@@ -1,11 +1,11 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import Navbar from './components/Header/Navbar/Navbar';
 import PipelineBackground from './components/Background/PipelineBG';
 
 function App() {
   return (
-    <div className="relative w-full h-full bg-[#474344]">
+    <div className="relative w-full h-full bg-[#4e4d51]">
 
 
       {/* Navbar on top */}
