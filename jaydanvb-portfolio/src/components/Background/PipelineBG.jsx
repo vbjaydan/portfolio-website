@@ -7,7 +7,7 @@ const PipelineBackground = () => {
     height: window.innerHeight,
   });
 
-  // Update dimensions on resize
+  // Track window resize
   useEffect(() => {
     const handleResize = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
@@ -16,17 +16,20 @@ const PipelineBackground = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const isMobile = dimensions.width < 768;
+
+  // Animate packets
   useEffect(() => {
     const path = document.getElementById("pipeline");
     if (!path) return;
 
     const packets = packetRefs.current;
     const length = path.getTotalLength();
-    let progress = [0, 200, 400]; // starting positions for multiple packets
+    let progress = [0, 200, 400];
 
     const animate = () => {
       for (let i = 0; i < packets.length; i++) {
-        progress[i] += 4; // speed
+        progress[i] += 4;
         if (progress[i] > length) progress[i] -= length;
         const point = path.getPointAtLength(progress[i]);
         packets[i].setAttribute("cx", point.x);
@@ -35,31 +38,57 @@ const PipelineBackground = () => {
       requestAnimationFrame(animate);
     };
     animate();
-  }, [dimensions]);
+  }, [dimensions, isMobile]);
 
-  // Adjust sizes based on screen width
-  const isMobile = dimensions.width < 768;
-  const packetRadius = isMobile ? 20 : 12;
-  const strokeWidth = isMobile ? 20 : 12;
+  const { width, height } = dimensions;
+
+  // Scale factors for desktop path
+  const scaleX = width / 1300;
+  const scaleY = height / 450;
+
+  const packetRadius = isMobile ? 16 : Math.max(12 * scaleX, 12);
+  const strokeWidth = isMobile ? 12 : Math.max(12 * scaleY, 12);
 
   return (
     <svg
       className="absolute top-0 left-0 -z-10"
-      width={dimensions.width}
-      height={dimensions.height}
-      viewBox="0 0 1300 450"
+      width={width}
+      height={height}
       xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid meet"
+      preserveAspectRatio="none"
     >
-      {/* Main pipeline path */}
-      <path
-        id="pipeline"
-        d="M0 100 L780 100 Q800 100 800 120 L800 410 Q800 430 820 430 L1300 430"
-        stroke="#Cb9531"
-        strokeWidth={strokeWidth}
-        fill="none"
-        strokeLinecap="round"
-      />
+      {isMobile ? (
+        <>
+          {/* Mobile horizontal line */}
+          <path
+            id="pipeline"
+            d={`M0 ${height / 2} L${width} ${height / 2}`}
+            stroke="#Cb9531"
+            strokeWidth={strokeWidth}
+            fill="none"
+            strokeLinecap="round"
+          />
+        </>
+      ) : (
+        <>
+          {/* Desktop scaled path */}
+          <path
+            id="pipeline"
+            d={`
+              M${0 * scaleX} ${100 * scaleY} 
+              L${780 * scaleX} ${100 * scaleY} 
+              Q${800 * scaleX} ${100 * scaleY} ${800 * scaleX} ${120 * scaleY} 
+              L${800 * scaleX} ${410 * scaleY} 
+              Q${800 * scaleX} ${430 * scaleY} ${820 * scaleX} ${430 * scaleY} 
+              L${1300 * scaleX} ${430 * scaleY}
+            `}
+            stroke="#Cb9531"
+            strokeWidth={strokeWidth}
+            fill="none"
+            strokeLinecap="round"
+          />
+        </>
+      )}
 
       {/* Moving packets */}
       {[0, 1, 2].map((i) => (
@@ -68,9 +97,7 @@ const PipelineBackground = () => {
           ref={(el) => (packetRefs.current[i] = el)}
           r={packetRadius}
           fill="#9c9c9f"
-          style={{
-            filter: "drop-shadow(0 0 10px #9c9c9f)", // glowing effect
-          }}
+          style={{ filter: "drop-shadow(0 0 10px #9c9c9f)" }}
         />
       ))}
     </svg>
