@@ -48,13 +48,13 @@ function App() {
 
         {/* Other sections */}
         <section id="aboutme" className="h-screen flex justify-center items-center text-white">
-          About Section
+          Working on it.
         </section>
         <section id="portfolio" className="h-screen flex justify-center items-center text-white">
-          Portfolio Section
+          Working on it.
         </section>
         <section id="contact" className="h-screen flex justify-center items-center text-white">
-          Contact Section
+          Working on it.
         </section>
       </div>
     </div>
